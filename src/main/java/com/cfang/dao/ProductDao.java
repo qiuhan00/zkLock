@@ -1,5 +1,7 @@
 package com.cfang.dao;
 
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -19,7 +21,6 @@ public class ProductDao {
 	}
 	
 	public boolean buy(String userName, String productname, int number) {
-		// 商品数量 减number
 		String sql = "update tbl_product "
 				+ "set productnumber = productnumber - "+number+
 				" where productname = '" + productname + "' and productnumber - "+number+" >= 0";
@@ -27,16 +28,14 @@ public class ProductDao {
 		if (count != 1) {
 			throw new MessageException("商品扣减失败");
 		}
-		/*
-		// 模拟数据库压力大的场景
-		try {
-			Thread.sleep(3000L);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		*/
 		
-		// 添加记录
+		// 模拟数据库压力大的场景
+//		try {
+//			TimeUnit.SECONDS.sleep(5);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
+		
 		String insertSql = "INSERT INTO tbl_record(productname, username, productnumber, createtime) "
 				+ "VALUES('" + productname + "', '" + userName + "', '"+number+"' , now())";
 		int insertCount = jdbcTemplate.update(insertSql);
